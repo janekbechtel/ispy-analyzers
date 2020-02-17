@@ -46,5 +46,14 @@ To use:
     cmsRun ispy_embedding.py
 ```
 
-* View the ouput in http://cern.ch/ispy-webgl
+* View the ouput in ispy, clone ispy webgl
 
+```
+    git clone -branch embedding https://github.com/harrypuuter/ispy-webgl.git
+
+```
+and open 
+```
+index.html
+```
+in the Browser (the loading screen can be removed by clicking)
