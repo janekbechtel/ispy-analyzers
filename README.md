@@ -8,13 +8,13 @@ To use:
 * Create a CMSSW environment: 
 
 ```
-    cmsrel CMSSW_8_0_0
+    cmsrel CMSSW_10_2_15
 ```
 
-* Change to the CMSSW_5_3_30/src/ directory:
+* Change to the CMSSW_10_2_15/src/ directory:
 
 ```
-    cd CMSSW_8_0_0/src/
+    cd CMSSW_10_2_15/src/
 ```
 * Initialize the CMSSW environment:
 
@@ -24,8 +24,8 @@ To use:
 * Clone the necessary source code:
 
 ```
-    git clone https://github.com/cms-outreach/ispy-analyzers.git ISpy/Analyzers 
-    git clone https://github.com/cms-outreach/ispy-services.git ISpy/Services
+    git clone -branch embedding https://github.com/harrypuuter/ispy-analyzers.git ISpy/Analyzers 
+    git clone https://github.com/harrypuuter/ispy-services.git ISpy/Services
 ```
 
 * Compile the code with the command:
@@ -43,7 +43,7 @@ To use:
 * Run the example configuration file:
 
 ```
-    cmsRun ispy_80X_cfg.py
+    cmsRun ispy_embedding.py
 ```
 
 * View the ouput in http://cern.ch/ispy-webgl
