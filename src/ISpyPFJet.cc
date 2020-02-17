@@ -62,7 +62,7 @@ void ISpyPFJet::analyze(const edm::Event& event, const edm::EventSetup& eventSet
     IgProperty PHI = jets.addProperty("phi", 0.0);
 
     for ( PFJetCollection::const_iterator ij = collection->begin(), ije = collection->end(); 
-          ij != ije; ++ij )
+          ij != ije; ++ij ) 
     {
       IgCollectionItem jet = jets.create();
       

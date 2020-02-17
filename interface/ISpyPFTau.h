@@ -3,6 +3,9 @@
 
 #include "FWCore/Framework/interface/EDAnalyzer.h"
 #include "FWCore/Utilities/interface/InputTag.h"
+#include "DataFormats/TauReco/interface/PFTau.h"
+#include "DataFormats/TauReco/interface/PFTauDiscriminator.h"
+#include "DataFormats/TauReco/interface/PFTauDiscriminatorByIsolation.h"
 
 class ISpyPFTau : public edm::EDAnalyzer
 {

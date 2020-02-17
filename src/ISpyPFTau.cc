@@ -12,13 +12,18 @@
 #include "ISpy/Services/interface/IgCollection.h"
 
 #include "DataFormats/TauReco/interface/PFTau.h"
+#include "RecoTauTag/RecoTau/interface/TauDiscriminationProducerBase.h"
 
 using namespace edm::service;
 using namespace edm;
 using namespace reco;
 
+edm::EDGetTokenT<reco::PFTauCollection> pfTauProducer_tok_;
+
 ISpyPFTau::ISpyPFTau(const edm::ParameterSet& iConfig)
-: inputTag_(iConfig.getParameter<edm::InputTag>("iSpyPFTauTag")){}
+: inputTag_(iConfig.getParameter<edm::InputTag>("iSpyPFTauTag")){
+  pfTauProducer_tok_ = consumes<reco::PFTauCollection>(edm::InputTag("hpsPFTauProducer"));
+}
 
 void ISpyPFTau::analyze(const edm::Event& event, const edm::EventSetup& eventSetup)
 {
@@ -36,7 +41,9 @@ void ISpyPFTau::analyze(const edm::Event& event, const edm::EventSetup& eventSet
   IgDataStorage *storage = config->storage();
 
   edm::Handle<PFTauCollection> collection;
-  event.getByLabel(inputTag_, collection);
+  
+  event.getByToken(pfTauProducer_tok_, collection);
+  // event.getByLabel("PFTauProducer", "pfRecoTauProducer");
 
   if ( collection.isValid() )
   {
@@ -57,6 +64,7 @@ void ISpyPFTau::analyze(const edm::Event& event, const edm::EventSetup& eventSet
      IgProperty PHI = taus.addProperty("phi", 0.0);
      IgProperty PT  = taus.addProperty("pt", 0.0);
      IgProperty CH  = taus.addProperty("charge", 0.0);
+     IgProperty THETA = taus.addProperty("theta", 0.0);
 
      // Unique to PFTau
      // Some properties can be nan
@@ -82,30 +90,35 @@ void ISpyPFTau::analyze(const edm::Event& event, const edm::EventSetup& eventSet
 
      for ( PFTauCollection::const_iterator t = collection->begin(); t != collection->end(); ++t )
      {
-       IgCollectionItem tau = taus.create();
+       if ((*t).pt() > 20.0)
+       {
+        IgCollectionItem tau = taus.create();
 
-       tau[ETA] = (*t).eta();
-       tau[PHI] = (*t).phi();
-       tau[PT]  = (*t).pt();
-       tau[CH]  = static_cast<double>((*t).charge());
-
-       tau[IPFC]  = static_cast<double>((*t).isolationPFChargedHadrCandsPtSum());
-       tau[IPFG]  = static_cast<double>((*t).isolationPFGammaCandsEtSum());
-       tau[MHPFC] = static_cast<double>((*t).maximumHCALPFClusterEt());
-    
-       tau[EF]    = static_cast<double>((*t).emFraction()); 
-       tau[HT]    = static_cast<double>((*t).hcalTotOverPLead()); 
-       tau[HM]    = static_cast<double>((*t).hcalMaxOverPLead()); 
-       tau[HTH]   = static_cast<double>((*t).hcal3x3OverPLead()); 
-       tau[ESS]   = static_cast<double>((*t).ecalStripSumEOverPLead()); 
-       tau[BR]    = static_cast<double>((*t).bremsRecoveryEOverPLead()); 
-       tau[EPIDO] = static_cast<double>((*t).electronPreIDOutput()); 
-       tau[EPIDD] = static_cast<int>((*t).electronPreIDDecision()); 
+        tau[ETA] = (*t).eta();
+        tau[PHI] = (*t).phi();
+        tau[PT]  = (*t).pt();
+        tau[CH]  = static_cast<double>((*t).charge());
+        tau[THETA]  = (*t).theta();
+        
+        tau[IPFC]  = static_cast<double>((*t).isolationPFChargedHadrCandsPtSum());
+        tau[IPFG]  = static_cast<double>((*t).isolationPFGammaCandsEtSum());
+        tau[MHPFC] = static_cast<double>((*t).maximumHCALPFClusterEt());
+      
+        tau[EF]    = static_cast<double>((*t).emFraction()); 
+        tau[HT]    = static_cast<double>((*t).hcalTotOverPLead()); 
+        tau[HM]    = static_cast<double>((*t).hcalMaxOverPLead()); 
+        tau[HTH]   = static_cast<double>((*t).hcal3x3OverPLead()); 
+        tau[ESS]   = static_cast<double>((*t).ecalStripSumEOverPLead()); 
+        tau[BR]    = static_cast<double>((*t).bremsRecoveryEOverPLead()); 
+        tau[EPIDO] = static_cast<double>((*t).electronPreIDOutput()); 
+        tau[EPIDD] = static_cast<int>((*t).electronPreIDDecision()); 
+        
+        tau[HMR] = static_cast<int>((*t).hasMuonReference()); 
+        tau[CC]   = static_cast<double>((*t).caloComp());
+        tau[SC]   = static_cast<double>((*t).segComp());
+        tau[MD]   = static_cast<int>((*t).muonDecision());
+       }
        
-       tau[HMR] = static_cast<int>((*t).hasMuonReference()); 
-       tau[CC]   = static_cast<double>((*t).caloComp());
-       tau[SC]   = static_cast<double>((*t).segComp());
-       tau[MD]   = static_cast<int>((*t).muonDecision());
      }
    }
 
