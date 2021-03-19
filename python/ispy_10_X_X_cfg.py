@@ -24,8 +24,8 @@ import FWCore.Utilities.FileUtils as FileUtils
 process.source = cms.Source(
     'PoolSource',
     fileNames = cms.untracked.vstring(
-    #'root://cmsxrootd.fnal.gov//store/data/Run2018D/DoubleMuon/AOD/PromptReco-v2/000/324/998/00000/AF519538-7FE5-4A4B-BD66-6FE4900CB5C6.root'
-
+      "file:hig-20-014/SingleMuon_Run2018D.root" 
+      #"file:hig-20-014/Simulation_H800_h125_hs250.root"
     ),
     skipEvents=cms.untracked.uint32(0)
 
@@ -36,6 +36,7 @@ from FWCore.MessageLogger.MessageLogger_cfi import *
 process.add_(
         cms.Service("ISpyService",
                         outputFileName = cms.untracked.string('igOutput_data.ig'),
+                        #outputFileName = cms.untracked.string('igOutput_mc.ig'),
                         outputESFilename = cms.untracked.string('ES.ig'),
                         outputFilePath = cms.untracked.string(outPath),
                         outputIg = cms.untracked.bool(True),
